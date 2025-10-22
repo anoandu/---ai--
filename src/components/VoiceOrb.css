@@ -13,38 +13,68 @@
   justify-content: center;
 }
 
+/* 眼睛容器：控制左右位置与横向“左右看”位移 */
+.orb-eye-wrap {
+  width: 28px; /* 远一点 */
+  height: 40px;
+  margin: 0 22px; /* 拉大眼距 */
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  animation: eyeLook 6.6s ease-in-out infinite;
+}
+.orb-eye-wrap.delay { animation-delay: 0.2s; }
+
+/* 竖向椭圆眼睛（更细长） */
 .orb-eye {
-  width: 22px; /* 较大比例，更可爱 */
-  height: 30px;
+  width: 16px;
+  height: 26px;
   background: #fff;
-  border-radius: 50%;
-  box-shadow: 0 0 10px rgba(255,255,255,0.8), 0 0 20px rgba(255,255,255,0.4);
-  margin: 0 10px; /* 适中眼距 */
-  animation: eyesBlink 3.6s ease-in-out infinite;
+  border-radius: 50%/60%; /* 竖向略细长 */
+  box-shadow: 0 0 10px rgba(255,255,255,0.85), 0 0 24px rgba(255,255,255,0.4);
+  animation: eyeBlink 3.8s ease-in-out infinite;
 }
 
-/* 待机/聆听皆可看向左右（不依赖父级 transform）*/
-.orb-container.idle .orb-eye,
-.orb-container.listening .orb-eye,
-.orb-container.processing .orb-eye {
-  animation-name: eyesBlink, eyesLookLR;
-  animation-duration: 3.6s, 7s;
-  animation-iteration-count: infinite, infinite;
-  animation-timing-function: ease-in-out, ease-in-out;
-}
-
-@keyframes eyesLookLR {
+/* 左右看（容器平移，眼珠整体动） */
+@keyframes eyeLook {
   0%, 20% { transform: translateX(0); }
-  30% { transform: translateX(-4px); }
-  40% { transform: translateX(-4px); }
-  55% { transform: translateX(4px); }
-  65% { transform: translateX(4px); }
-  80%, 100% { transform: translateX(0); }
+  28% { transform: translateX(-6px); }
+  40% { transform: translateX(-6px); }
+  60% { transform: translateX(6px); }
+  72% { transform: translateX(6px); }
+  86%, 100% { transform: translateX(0); }
 }
 
-@keyframes eyesBlink {
+/* 眨眼 */
+@keyframes eyeBlink {
   0%, 92%, 100% { transform: scaleY(1); }
-  96% { transform: scaleY(0.15); }
+  96% { transform: scaleY(0.2); }
+}
+
+/* 立体感增强：在球体上加柔和高光与下方阴影（通过伪元素）*/
+.orb-main::before {
+  content: '';
+  position: absolute;
+  top: -8%;
+  left: -8%;
+  width: 60%;
+  height: 60%;
+  border-radius: 50%;
+  background: radial-gradient(circle at 30% 30%, rgba(255,255,255,0.6), rgba(255,255,255,0));
+  filter: blur(8px);
+  pointer-events: none;
+}
+.orb-main::after {
+  content: '';
+  position: absolute;
+  bottom: -10%;
+  left: 10%;
+  width: 80%;
+  height: 50%;
+  border-radius: 50%;
+  background: radial-gradient(circle, rgba(0,0,0,0.12), rgba(0,0,0,0));
+  filter: blur(12px);
+  pointer-events: none;
 }
 .orb-container {
   position: relative;

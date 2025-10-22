@@ -88,8 +88,12 @@ const VoiceOrb: React.FC<VoiceOrbProps> = ({ state, audioLevel = 0, isSpeaking =
 
       {/* 可爱大眼睛（固定在脸上，不随旋转缩放）*/}
       <div className="orb-eyes">
-        <div className="orb-eye orb-eye-left" />
-        <div className="orb-eye orb-eye-right" />
+        <div className="orb-eye-wrap">
+          <div className="orb-eye" />
+        </div>
+        <div className="orb-eye-wrap delay">
+          <div className="orb-eye" />
+        </div>
       </div>
     </div>
   );
