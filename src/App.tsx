@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useRef } from 'react';
+import { useState, useEffect, useRef } from 'react';
 import { AppState, Language, LLMResponse } from './types';
 import { t } from './i18n';
 import { 
@@ -272,14 +272,14 @@ function App() {
     setState('DISAMBIGUATE');
   };
 
-  // 再说一次
-  const handleTryAgain = () => {
-    setState('IDLE');
-    setCurrentSentence({ zh: '', en: '' });
-  };
+  // 再说一次（暂时未使用，保留备用）
+  // const handleTryAgain = () => {
+  //   setState('IDLE');
+  //   setCurrentSentence({ zh: '', en: '' });
+  // };
 
   // 图片板选择
-  const handlePictureBoardSelect = (intent: string, sentenceZh: string, sentenceEn: string) => {
+  const handlePictureBoardSelect = (_intent: string, sentenceZh: string, sentenceEn: string) => {
     setCurrentSentence({
       zh: sentenceZh,
       en: sentenceEn,

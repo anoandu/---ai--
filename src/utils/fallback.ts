@@ -2,7 +2,7 @@ import { Language, LLMResponse } from '../types';
 import { COMMON_NEEDS } from '../constants';
 
 // 本地关键词匹配兜底方案
-export const fallbackIntent = (transcript: string, language: Language): LLMResponse => {
+export const fallbackIntent = (transcript: string, _language: Language): LLMResponse => {
   const lowerText = transcript.toLowerCase();
   
   // 关键词映射

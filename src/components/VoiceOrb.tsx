@@ -14,7 +14,7 @@ const VoiceOrb: React.FC<VoiceOrbProps> = ({ state, audioLevel = 0, isSpeaking =
   const isActive = isListening || isProcessing;
 
   // 根据音量调整球的大小和亮度
-  const dynamicScale = isListening ? 1 + (audioLevel * 0.3) : 1; // 1.0 - 1.3
+  // const dynamicScale = isListening ? 1 + (audioLevel * 0.3) : 1; // 1.0 - 1.3
   const dynamicOpacity = isListening ? 0.8 + (audioLevel * 0.2) : 1; // 0.8 - 1.0
 
   const baseScale = isListening ? (isSpeaking ? 1.25 : 1.1) : isProcessing ? 0.9 : 1;
