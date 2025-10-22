@@ -268,15 +268,20 @@ function App() {
   // 确认 - No
   const handleConfirmNo = () => {
     // 显示选项：再说一次 或 使用图片板
-    // 这里简化为直接进入 DISAMBIGUATE
+    setState('NO_OPTIONS');
+  };
+
+  // 重说一次
+  const handleTryAgain = () => {
+    setState('IDLE');
+    setCurrentSentence({ zh: '', en: '' });
+  };
+
+  // 使用图片板
+  const handleUsePictureBoard = () => {
     setState('DISAMBIGUATE');
   };
 
-  // 再说一次（暂时未使用，保留备用）
-  // const handleTryAgain = () => {
-  //   setState('IDLE');
-  //   setCurrentSentence({ zh: '', en: '' });
-  // };
 
   // 图片板选择
   const handlePictureBoardSelect = (_intent: string, sentenceZh: string, sentenceEn: string) => {
@@ -333,6 +338,15 @@ function App() {
           </div>
         );
       
+      case 'NO_OPTIONS':
+        return (
+          <div className="main-text">
+            <p className="confirm-text">
+              {t('chooseBelowOrTryAgain', language)}
+            </p>
+          </div>
+        );
+      
       case 'OUTPUT':
         const outputSentence = language === 'zh' ? currentSentence.zh : currentSentence.en;
         return (
@@ -362,11 +376,24 @@ function App() {
       );
     }
 
+    if (state === 'NO_OPTIONS') {
+      return (
+        <div className="action-buttons">
+          <button className="action-button action-button-try-again" onClick={handleTryAgain}>
+            {t('tryAgain', language)}
+          </button>
+          <button className="action-button action-button-picture-board" onClick={handleUsePictureBoard}>
+            {t('usePictureBoard', language)}
+          </button>
+        </div>
+      );
+    }
+
     if (state === 'OUTPUT') {
       return (
         <div className="action-buttons">
           <button className="action-button action-button-restart" onClick={handleRestart}>
-            {t('tryAgain', language)}
+            {t('saySomethingElse', language)}
           </button>
         </div>
       );

@@ -4,7 +4,8 @@ export type AppState =
   | 'PROCESSING' 
   | 'CONFIRM' 
   | 'OUTPUT' 
-  | 'DISAMBIGUATE';
+  | 'DISAMBIGUATE'
+  | 'NO_OPTIONS';
 
 export type Language = 'zh' | 'en';
 
