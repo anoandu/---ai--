@@ -64,11 +64,6 @@ const VoiceOrb: React.FC<VoiceOrbProps> = ({ state, audioLevel = 0, isSpeaking =
         {/* 发光层 */}
           <div className="orb-glow" />
           
-          {/* 眼睛 */}
-          <div className="orb-eyes">
-            <div className="orb-eye orb-eye-left" />
-            <div className="orb-eye orb-eye-right" />
-          </div>
         </div>
       </div>
     </div>
