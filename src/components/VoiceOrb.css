@@ -17,7 +17,7 @@
 .orb-eye-wrap {
   width: 32px; /* 再大一点点 */
   height: 46px;
-  margin: 0 12px; /* 眼距 12px */
+  margin: 0 10px; /* 眼距稍近 */
   display: flex;
   align-items: center;
   justify-content: center;
