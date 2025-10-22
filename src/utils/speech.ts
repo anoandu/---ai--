@@ -19,14 +19,14 @@ export class SpeechRecognitionService {
   private interimTranscript: string = '';
   private onTranscriptUpdate?: (text: string) => void;
   
-  constructor(private _language: Language, onTranscriptUpdate?: (text: string) => void) {
+  constructor(language: Language, onTranscriptUpdate?: (text: string) => void) {
     this.onTranscriptUpdate = onTranscriptUpdate;
     if (isSpeechRecognitionSupported()) {
       const SpeechRecognition = (window as any).SpeechRecognition || (window as any).webkitSpeechRecognition;
       this.recognition = new SpeechRecognition();
       this.recognition.continuous = true; // 持续录音
       this.recognition.interimResults = true; // 支持中间结果
-      this.recognition.lang = _language === 'zh' ? 'zh-CN' : 'en-US';
+      this.recognition.lang = language === 'zh' ? 'zh-CN' : 'en-US';
       this.recognition.maxAlternatives = 1;
       
       this.recognition.onresult = (event: any) => {
@@ -135,7 +135,6 @@ export class SpeechRecognitionService {
   }
   
   setLanguage(language: Language) {
-    this._language = language;
     if (this.recognition) {
       this.recognition.lang = language === 'zh' ? 'zh-CN' : 'en-US';
     }
