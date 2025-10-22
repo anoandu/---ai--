@@ -24,7 +24,10 @@ const VoiceOrb: React.FC<VoiceOrbProps> = ({ state, audioLevel = 0, isSpeaking =
   console.log('VoiceOrb:', { state, audioLevel: audioLevel.toFixed(2), isSpeaking, scale: scale.toFixed(2) });
 
   return (
-    <div className={`orb-container ${state.toLowerCase()}`}>
+    <div
+      className={`orb-container ${state.toLowerCase()}`}
+      style={{ width: 180, height: 180, marginTop: 0 }}
+    >
       {/* 说话时的扩散波纹 */}
       {isListening && isSpeaking && (
         <>
@@ -35,14 +38,14 @@ const VoiceOrb: React.FC<VoiceOrbProps> = ({ state, audioLevel = 0, isSpeaking =
       )}
       
       {/* 可缩放外层 */}
-      <div className="orb-scale" style={{ transform: `scale(${scale})`, transition: 'transform 0.12s ease-out' }}>
+      <div
+        className="orb-scale"
+        style={{ width: 160, height: 160, transform: `scale(${scale})`, transition: 'transform 0.12s ease-out' }}
+      >
         {/* 主球 */}
-        <div 
+        <div
           className={`orb-main ${isActive ? 'active' : ''}`}
-          style={{
-            opacity: dynamicOpacity,
-            transition: isListening ? 'opacity 0.1s ease-out' : undefined
-          }}
+          style={{ width: 160, height: 160, opacity: dynamicOpacity, transition: isListening ? 'opacity 0.1s ease-out' : undefined }}
         >
         {/* 内部小球 - 使用多个不同颜色和大小的小球 */}
         <div className="orb-particle orb-particle-1" />

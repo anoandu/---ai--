@@ -41,7 +41,7 @@
   flex-direction: column;
   align-items: center;
   justify-content: flex-start;
-  padding: 40px 20px 140px;
+  padding: 12px 16px 120px; /* 上移整体布局，移动端更靠上 */
   gap: 30px; /* 减少元素间距，为移动端优化 */
   position: relative;
 }
@@ -61,7 +61,7 @@
 }
 
 .realtime-text {
-  font-size: clamp(18px, 2.3vw, 22px);
+  font-size: clamp(16px, 2.2vw, 20px);
   font-weight: 600;
   color: var(--color-text);
   margin: 0;
