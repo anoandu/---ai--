@@ -40,26 +40,24 @@
   display: flex;
   flex-direction: column;
   align-items: center;
-  justify-content: center;
-  padding: 80px 20px 140px;
-  gap: 50px;
+  justify-content: flex-start;
+  padding: 40px 20px 140px;
+  gap: 30px; /* 减少元素间距，为移动端优化 */
   position: relative;
 }
 
 /* 实时识别文字 */
 .realtime-transcript {
-  position: absolute;
-  bottom: 160px; /* 移到球下方，避免遮挡 */
-  left: 50%;
-  transform: translateX(-50%);
-  max-width: min(90%, 680px);
-  padding: 16px 22px;
-  background: rgba(255, 255, 255, 0.96);
-  border-radius: 16px;
+  position: relative; /* 改为相对定位，跟随布局流 */
+  margin-top: 20px; /* 位于语音球下方 */
+  max-width: 80%;
+  padding: 15px 25px; /* 减小内边距 */
+  background: rgba(255, 255, 255, 0.95);
+  border-radius: 20px;
   box-shadow: 0 8px 32px rgba(0, 0, 0, 0.12);
   z-index: 10;
-  animation: fadeIn 0.2s var(--animation-easing);
-  pointer-events: none;
+  animation: fadeIn 0.3s var(--animation-easing);
+  pointer-events: none; /* 不阻挡下方元素点击 */
 }
 
 .realtime-text {

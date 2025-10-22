@@ -1,7 +1,7 @@
 .orb-container {
   position: relative;
-  width: 280px;
-  height: 280px;
+  width: 200px;
+  height: 200px;
   display: flex;
   align-items: center;
   justify-content: center;
@@ -10,8 +10,8 @@
 
 /* 新增外层缩放容器，使 Listening 时随音量缩放更明显且不破坏内部动画 */
 .orb-scale {
-  width: 240px;
-  height: 240px;
+  width: 180px;
+  height: 180px;
   display: flex;
   align-items: center;
   justify-content: center;
@@ -21,8 +21,8 @@
 
 .orb-main {
   position: relative;
-  width: 240px;
-  height: 240px;
+  width: 180px;
+  height: 180px;
   border-radius: 50%;
   transition: transform 0.8s var(--animation-easing);
   transform-style: preserve-3d;
@@ -56,33 +56,33 @@
 }
 
 .orb-wave-1 {
-  width: 240px;
-  height: 240px;
+  width: 180px;
+  height: 180px;
   animation: waveExpand 1.4s ease-out infinite;
 }
 
 .orb-wave-2 {
-  width: 240px;
-  height: 240px;
+  width: 180px;
+  height: 180px;
   animation: waveExpand 1.4s ease-out infinite 0.45s;
 }
 
 .orb-wave-3 {
-  width: 240px;
-  height: 240px;
+  width: 180px;
+  height: 180px;
   animation: waveExpand 1.4s ease-out infinite 0.9s;
 }
 
 @keyframes waveExpand {
   0% {
-    width: 240px;
-    height: 240px;
+    width: 180px;
+    height: 180px;
     opacity: 0.85;
     border-width: 4px;
   }
   100% {
-    width: 420px;
-    height: 420px;
+    width: 300px;
+    height: 300px;
     opacity: 0;
     border-width: 0.5px;
   }
