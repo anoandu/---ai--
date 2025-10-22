@@ -458,17 +458,17 @@
   background: rgba(255, 255, 255, 1);
   border-radius: 50%;
   box-shadow: 0 0 12px rgba(255, 255, 255, 0.8), 0 0 20px rgba(255, 255, 255, 0.4);
-  top: 50%;
-  transform: translateY(-50%);
   z-index: 25; /* 眼睛本身也要高层级 */
 }
 
 .orb-eye-left {
-  left: 32%;
+  left: 40%;
+  top: 40%; /* 调整到球的上半部分 */
 }
 
 .orb-eye-right {
-  right: 32%;
+  right: 40%;
+  top: 40%; /* 调整到球的上半部分 */
 }
 
 /* 待机时眼睛动画 */
