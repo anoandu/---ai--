@@ -212,9 +212,10 @@ const getPreferredVoice = (language: Language): SpeechSynthesisVoice | null => {
   ];
 
   // 优先列表（不同平台常见的自然人声）
-  const preferredZhIOS = ['Yating', 'Ting-Ting', 'Mei-Jia', 'Yuxi', 'Liang', 'Siri'];
-  const preferredZhOther = ['Ting-Ting', 'Mei-Jia', 'Liang', 'Xiao-Jiao', 'Google 國語', 'Google 中文', 'Google 普通话'];
-  const preferredEn = ['Samantha', 'Alex', 'Victoria', 'Moira', 'Karen', 'Daniel', 'Google US English', 'Google UK English Female', 'Google UK English Male'];
+  const preferredZhIOS = ['Yating', 'Ting-Ting', 'Mei-Jia', 'Yuxi', 'Siri'];
+  const preferredZhOther = ['Ting-Ting', 'Mei-Jia', 'Google 國語', 'Google 中文', 'Google 普通话'];
+  // 英文明确偏好女性音色
+  const preferredEn = ['Samantha', 'Victoria', 'Moira', 'Karen', 'Google US English', 'Google UK English Female'];
 
   const preferredByLang: Record<Language, string[]> = {
     zh: isIOS ? preferredZhIOS : preferredZhOther,
@@ -228,6 +229,10 @@ const getPreferredVoice = (language: Language): SpeechSynthesisVoice | null => {
     const v = voices.find(voice => voice.name.toLowerCase().includes(name.toLowerCase()));
     if (v) return v;
   }
+
+  // 1.1) 若支持标注 Female，则优先 Female
+  const femaleHint = voices.find(v => (v.lang || '').toLowerCase().startsWith(langPrefix) && /female|女/i.test(v.name));
+  if (femaleHint) return femaleHint;
 
   // 2) 其次选择语言前缀匹配 + 非屏蔽
   const candidates = voices.filter(v => v.lang && v.lang.toLowerCase().startsWith(langPrefix) && !blocked.includes(v.name));
@@ -254,15 +259,15 @@ export const speak = (text: string, language: Language): Promise<void> => {
     
     const utterance = new SpeechSynthesisUtterance(text);
     utterance.lang = language === 'zh' ? 'zh-CN' : 'en-US';
-    // 更自然的语速音调（iOS 中文稍慢更自然）
+    // 更自然的语速音调（女性人声更贴近日常语速）
     if (language === 'zh' && isIOS) {
-      utterance.rate = 0.94;
+      utterance.rate = 0.88; // iOS 中文再慢一些
       utterance.pitch = 0.98;
     } else if (language === 'zh') {
-      utterance.rate = 0.98;
-      utterance.pitch = 1.0;
+      utterance.rate = 0.92; // 其它平台中文放慢
+      utterance.pitch = 0.98;
     } else {
-      utterance.rate = 1.0;
+      utterance.rate = 0.95; // 英文稍慢
       utterance.pitch = 1.0;
     }
     utterance.volume = 1;
