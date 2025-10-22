@@ -1,5 +1,53 @@
 .orb-container {
   position: relative;
+}
+
+/* 可爱眼睛：固定在脸上（容器层），不受 .orb-scale 旋转/缩放影响 */
+.orb-eyes {
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  z-index: 6; /* 在波纹(5)之上，保证可见 */
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.orb-eye {
+  width: 22px; /* 较大比例，更可爱 */
+  height: 30px;
+  background: #fff;
+  border-radius: 50%;
+  box-shadow: 0 0 10px rgba(255,255,255,0.8), 0 0 20px rgba(255,255,255,0.4);
+  margin: 0 10px; /* 适中眼距 */
+  animation: eyesBlink 3.6s ease-in-out infinite;
+}
+
+/* 待机/聆听皆可看向左右（不依赖父级 transform）*/
+.orb-container.idle .orb-eye,
+.orb-container.listening .orb-eye,
+.orb-container.processing .orb-eye {
+  animation-name: eyesBlink, eyesLookLR;
+  animation-duration: 3.6s, 7s;
+  animation-iteration-count: infinite, infinite;
+  animation-timing-function: ease-in-out, ease-in-out;
+}
+
+@keyframes eyesLookLR {
+  0%, 20% { transform: translateX(0); }
+  30% { transform: translateX(-4px); }
+  40% { transform: translateX(-4px); }
+  55% { transform: translateX(4px); }
+  65% { transform: translateX(4px); }
+  80%, 100% { transform: translateX(0); }
+}
+
+@keyframes eyesBlink {
+  0%, 92%, 100% { transform: scaleY(1); }
+  96% { transform: scaleY(0.15); }
+}
+.orb-container {
+  position: relative;
   width: 200px;
   height: 200px;
   display: flex;
