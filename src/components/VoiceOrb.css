@@ -17,6 +17,8 @@
   justify-content: center;
   position: relative;
   z-index: 2;
+  transform-origin: center;
+  will-change: transform;
 }
 
 .orb-main {
@@ -35,7 +37,8 @@
 
 /* LISTENING 状态 - 放大 + 旋转 */
 .orb-container.listening .orb-main {
-  animation: orbRotate 7s linear infinite, orbPulse 1.6s ease-in-out infinite;
+  /* 旋转改由父层 .orb-scale 内联控制，避免 transform 冲突 */
+  animation: orbPulse 1.6s ease-in-out infinite;
 }
 
 /* 说话时（通过外部 scale 叠加），增强颜色与发光强度可由父层内联样式控制。若需要强制速度更快：*/
@@ -90,8 +93,7 @@
 
 /* PROCESSING 状态 - 缩小 + 慢速旋转 */
 .orb-container.processing .orb-main {
-  transform: scale(0.9);
-  animation: orbRotate 12s linear infinite;
+  /* 缩放与旋转均由 .orb-scale 内联控制 */
 }
 
 /* 说话时：更快旋转并稍许弹性缩放 */

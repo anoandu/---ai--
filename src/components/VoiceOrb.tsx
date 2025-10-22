@@ -33,15 +33,6 @@ const VoiceOrb: React.FC<VoiceOrbProps> = ({ state, audioLevel = 0, isSpeaking =
       className={`orb-container ${state.toLowerCase()}`}
       style={{ width: 180, height: 180, marginTop: 'clamp(24px, 10vh, 72px)' }}
     >
-      {/* 说话时的扩散波纹 */}
-      {isListening && isSpeaking && (
-        <>
-          <div className="orb-wave orb-wave-1" />
-          <div className="orb-wave orb-wave-2" />
-          <div className="orb-wave orb-wave-3" />
-        </>
-      )}
-      
       {/* 可缩放外层 */}
       <div
         className="orb-scale"
@@ -84,6 +75,15 @@ const VoiceOrb: React.FC<VoiceOrbProps> = ({ state, audioLevel = 0, isSpeaking =
           <div className="orb-glow" />
           
         </div>
+
+        {/* 说话时的扩散波纹（挪到 orb-scale 内部，位于主球之上）*/}
+        {isListening && isSpeaking && (
+          <>
+            <div className="orb-wave orb-wave-1" />
+            <div className="orb-wave orb-wave-2" />
+            <div className="orb-wave orb-wave-3" />
+          </>
+        )}
       </div>
     </div>
   );
