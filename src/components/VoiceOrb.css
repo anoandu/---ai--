@@ -30,7 +30,7 @@
   width: 19px; /* 再大一点点 */
   height: 36px; /* 更竖长 */
   background: #F1E8FF; /* 柔和淡紫，避免强反光 */
-  border-radius: 50%; /* 使用 50% 确保是完美椭圆，避免两端被切平 */
+  border-radius: 50%/72%; /* 恢复略带“平头”的竖向椭圆效果 */
   box-shadow: 0 0 6px rgba(240,235,255,0.8), 0 0 16px rgba(190,160,255,0.35);
   animation: eyeBlink 3.8s ease-in-out infinite;
   overflow: visible;
