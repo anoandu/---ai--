@@ -17,7 +17,7 @@
 .orb-eye-wrap {
   width: 32px; /* 再大一点点 */
   height: 46px;
-  margin: 0 10px; /* 再近一点点 */
+  margin: 0 12px; /* 眼距 12px */
   display: flex;
   align-items: center;
   justify-content: center;
@@ -29,9 +29,9 @@
 .orb-eye {
   width: 19px; /* 再大一点点 */
   height: 36px; /* 更竖长 */
-  background: #F1E8FF; /* 带淡紫的柔和白，适配紫色球 */
+  background: #fff; /* 纯白 */
   border-radius: 50%/72%; /* 更竖向的椭圆 */
-  box-shadow: 0 0 6px rgba(240,235,255,0.8), 0 0 16px rgba(190,160,255,0.35);
+  box-shadow: 0 0 10px rgba(255,255,255,0.85), 0 0 24px rgba(255,255,255,0.4);
   animation: eyeBlink 3.8s ease-in-out infinite;
 }
 
