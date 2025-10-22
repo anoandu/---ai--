@@ -198,7 +198,9 @@ export class SpeechRecognitionService {
 }
 
 // TTS - 语音合成
-// 选择更自然的人声，避免 macOS 上的“趣味音色”（如 Zarvox/Trinoids）
+// 选择更自然的人声，避免“趣味音色”（如 Zarvox/Trinoids）
+const isIOS = /iP(hone|ad|od)/.test(navigator.userAgent);
+
 const getPreferredVoice = (language: Language): SpeechSynthesisVoice | null => {
   const voices = window.speechSynthesis.getVoices();
   if (!voices || voices.length === 0) return null;
@@ -210,16 +212,20 @@ const getPreferredVoice = (language: Language): SpeechSynthesisVoice | null => {
   ];
 
   // 优先列表（不同平台常见的自然人声）
+  const preferredZhIOS = ['Yating', 'Ting-Ting', 'Mei-Jia', 'Yuxi', 'Liang', 'Siri'];
+  const preferredZhOther = ['Ting-Ting', 'Mei-Jia', 'Liang', 'Xiao-Jiao', 'Google 國語', 'Google 中文', 'Google 普通话'];
+  const preferredEn = ['Samantha', 'Alex', 'Victoria', 'Moira', 'Karen', 'Daniel', 'Google US English', 'Google UK English Female', 'Google UK English Male'];
+
   const preferredByLang: Record<Language, string[]> = {
-    zh: ['Ting-Ting', 'Mei-Jia', 'Liang', 'Xiao-Jiao', 'Google 粤语', 'Google 國語', 'Google 中文'],
-    en: ['Samantha', 'Alex', 'Victoria', 'Moira', 'Karen', 'Daniel', 'Google US English', 'Google UK English Female', 'Google UK English Male']
+    zh: isIOS ? preferredZhIOS : preferredZhOther,
+    en: preferredEn
   };
 
   const langPrefix = language === 'zh' ? 'zh' : 'en';
 
-  // 1) 优先精确匹配优选名称
+  // 1) 优先名称包含匹配（不同平台命名可能包含前后缀）
   for (const name of preferredByLang[language]) {
-    const v = voices.find(voice => voice.name === name);
+    const v = voices.find(voice => voice.name.toLowerCase().includes(name.toLowerCase()));
     if (v) return v;
   }
 
@@ -248,9 +254,17 @@ export const speak = (text: string, language: Language): Promise<void> => {
     
     const utterance = new SpeechSynthesisUtterance(text);
     utterance.lang = language === 'zh' ? 'zh-CN' : 'en-US';
-    // 更自然的语速音调
-    utterance.rate = 1.0;
-    utterance.pitch = 1.0;
+    // 更自然的语速音调（iOS 中文稍慢更自然）
+    if (language === 'zh' && isIOS) {
+      utterance.rate = 0.94;
+      utterance.pitch = 0.98;
+    } else if (language === 'zh') {
+      utterance.rate = 0.98;
+      utterance.pitch = 1.0;
+    } else {
+      utterance.rate = 1.0;
+      utterance.pitch = 1.0;
+    }
     utterance.volume = 1;
     
     // 尝试选择更合适的人声
