@@ -15,9 +15,9 @@
 
 /* 眼睛容器：控制左右位置与横向“左右看”位移 */
 .orb-eye-wrap {
-  width: 30px; /* 稍大容器，便于更大更竖长的眼睛 */
-  height: 44px;
-  margin: 0 14px; /* 眼距更近一点 */
+  width: 32px; /* 再大一点点 */
+  height: 46px;
+  margin: 0 10px; /* 再近一点点 */
   display: flex;
   align-items: center;
   justify-content: center;
@@ -27,11 +27,11 @@
 
 /* 竖向椭圆眼睛（更细长） */
 .orb-eye {
-  width: 18px; /* 更大 */
-  height: 34px; /* 更竖长 */
-  background: #fff;
-  border-radius: 50%/70%; /* 更竖向的椭圆 */
-  box-shadow: 0 0 10px rgba(255,255,255,0.85), 0 0 24px rgba(255,255,255,0.4);
+  width: 19px; /* 再大一点点 */
+  height: 36px; /* 更竖长 */
+  background: #F1E8FF; /* 带淡紫的柔和白，适配紫色球 */
+  border-radius: 50%/72%; /* 更竖向的椭圆 */
+  box-shadow: 0 0 6px rgba(240,235,255,0.8), 0 0 16px rgba(190,160,255,0.35);
   animation: eyeBlink 3.8s ease-in-out infinite;
 }
 
