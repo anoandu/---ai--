@@ -1,0 +1,425 @@
+.orb-container {
+  position: relative;
+  width: 280px;
+  height: 280px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin: 0 auto;
+}
+
+/* 新增外层缩放容器，使 Listening 时随音量缩放更明显且不破坏内部动画 */
+.orb-scale {
+  width: 240px;
+  height: 240px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  position: relative;
+  z-index: 2;
+}
+
+.orb-main {
+  position: relative;
+  width: 240px;
+  height: 240px;
+  border-radius: 50%;
+  transition: transform 0.8s var(--animation-easing);
+  transform-style: preserve-3d;
+}
+
+/* IDLE 状态 - 轻微呼吸 */
+.orb-container.idle .orb-main {
+  animation: orbBreathe 4s ease-in-out infinite;
+}
+
+/* LISTENING 状态 - 放大 + 旋转 */
+.orb-container.listening .orb-main {
+  animation: orbRotate 8s linear infinite, orbPulse 2s ease-in-out infinite;
+}
+
+/* 说话时（通过外部 scale 叠加），增强颜色与发光强度可由父层内联样式控制。若需要强制速度更快：*/
+.orb-container.listening .orb-main {
+  --rotate-speed: 6s;
+}
+
+/* 扩散波纹 */
+.orb-wave {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  border-radius: 50%;
+  border: 4px solid rgba(140, 200, 255, 0.7);
+  pointer-events: none;
+  z-index: 5;
+}
+
+.orb-wave-1 {
+  width: 240px;
+  height: 240px;
+  animation: waveExpand 1.4s ease-out infinite;
+}
+
+.orb-wave-2 {
+  width: 240px;
+  height: 240px;
+  animation: waveExpand 1.4s ease-out infinite 0.45s;
+}
+
+.orb-wave-3 {
+  width: 240px;
+  height: 240px;
+  animation: waveExpand 1.4s ease-out infinite 0.9s;
+}
+
+@keyframes waveExpand {
+  0% {
+    width: 240px;
+    height: 240px;
+    opacity: 0.85;
+    border-width: 4px;
+  }
+  100% {
+    width: 420px;
+    height: 420px;
+    opacity: 0;
+    border-width: 0.5px;
+  }
+}
+
+/* PROCESSING 状态 - 缩小 + 慢速旋转 */
+.orb-container.processing .orb-main {
+  transform: scale(0.9);
+  animation: orbRotate 12s linear infinite;
+}
+
+/* CONFIRM / OUTPUT 状态 - 轻微闪烁 */
+.orb-container.confirm .orb-main,
+.orb-container.output .orb-main {
+  animation: orbBlink 3s ease-in-out infinite;
+}
+
+/* 主渐变层 */
+.orb-gradient {
+  position: absolute;
+  inset: 0;
+  border-radius: 50%;
+  background: radial-gradient(
+    circle at 30% 30%,
+    rgba(230, 184, 255, 0.9),
+    rgba(200, 160, 255, 0.7) 40%,
+    rgba(180, 140, 255, 0.5) 70%,
+    rgba(160, 120, 255, 0.3)
+  );
+  filter: blur(1px);
+  transition: background 0.8s ease;
+}
+
+/* LISTENING 状态 - 冷色调（蓝紫） */
+.orb-container.listening .orb-gradient {
+  background: radial-gradient(
+    circle at 30% 30%,
+    rgba(160, 210, 255, 1),
+    rgba(140, 180, 255, 0.95) 40%,
+    rgba(200, 180, 255, 0.85) 70%,
+    rgba(220, 200, 255, 0.6)
+  );
+}
+
+/* PROCESSING 状态 - 暖色调（粉橙） */
+.orb-container.processing .orb-gradient {
+  background: radial-gradient(
+    circle at 30% 30%,
+    rgba(255, 200, 220, 1),
+    rgba(255, 180, 200, 0.9) 40%,
+    rgba(255, 210, 190, 0.7) 70%,
+    rgba(255, 220, 200, 0.4)
+  );
+}
+
+/* 发光层 */
+.orb-glow {
+  position: absolute;
+  inset: -20px;
+  border-radius: 50%;
+  background: radial-gradient(
+    circle,
+    rgba(230, 184, 255, 0.3),
+    rgba(230, 184, 255, 0) 70%
+  );
+  filter: blur(25px);
+  opacity: 0.6;
+  transition: opacity 0.8s ease;
+}
+
+.orb-container.listening .orb-glow {
+  opacity: 1;
+  background: radial-gradient(
+    circle,
+    rgba(160, 210, 255, 0.7),
+    rgba(160, 210, 255, 0) 70%
+  );
+  animation: glowPulse 2s ease-in-out infinite;
+}
+
+.orb-container.processing .orb-glow {
+  opacity: 0.8;
+  background: radial-gradient(
+    circle,
+    rgba(255, 190, 210, 0.4),
+    rgba(255, 190, 210, 0) 70%
+  );
+}
+
+/* 内部小球 */
+.orb-particle {
+  position: absolute;
+  border-radius: 50%;
+  mix-blend-mode: screen;
+  filter: blur(8px);
+  transition: all 0.8s var(--animation-easing);
+}
+
+/* 小球颜色和大小配置 */
+.orb-particle-1 {
+  width: 60px;
+  height: 60px;
+  top: 20%;
+  left: 25%;
+  background: radial-gradient(circle, rgba(180, 200, 255, 0.8), rgba(180, 200, 255, 0));
+}
+
+.orb-particle-2 {
+  width: 80px;
+  height: 80px;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  background: radial-gradient(circle, rgba(230, 184, 255, 0.9), rgba(230, 184, 255, 0));
+}
+
+.orb-particle-3 {
+  width: 50px;
+  height: 50px;
+  bottom: 25%;
+  right: 20%;
+  background: radial-gradient(circle, rgba(200, 160, 255, 0.7), rgba(200, 160, 255, 0));
+}
+
+.orb-particle-4 {
+  width: 70px;
+  height: 70px;
+  top: 35%;
+  right: 15%;
+  background: radial-gradient(circle, rgba(220, 200, 255, 0.6), rgba(220, 200, 255, 0));
+}
+
+.orb-particle-5 {
+  width: 55px;
+  height: 55px;
+  bottom: 20%;
+  left: 30%;
+  background: radial-gradient(circle, rgba(190, 180, 255, 0.7), rgba(190, 180, 255, 0));
+}
+
+.orb-particle-6 {
+  width: 45px;
+  height: 45px;
+  top: 15%;
+  left: 55%;
+  background: radial-gradient(circle, rgba(210, 190, 255, 0.6), rgba(210, 190, 255, 0));
+}
+
+.orb-particle-7 {
+  width: 65px;
+  height: 65px;
+  top: 60%;
+  left: 20%;
+  background: radial-gradient(circle, rgba(180, 170, 255, 0.5), rgba(180, 170, 255, 0));
+}
+
+.orb-particle-8 {
+  width: 75px;
+  height: 75px;
+  bottom: 30%;
+  right: 35%;
+  background: radial-gradient(circle, rgba(200, 180, 255, 0.8), rgba(200, 180, 255, 0));
+}
+
+/* LISTENING 状态 - 小球公转动画 */
+.orb-container.listening .orb-particle-1 {
+  animation: orbitParticle1 6s linear infinite;
+}
+
+.orb-container.listening .orb-particle-2 {
+  animation: orbitParticle2 7s linear infinite;
+}
+
+.orb-container.listening .orb-particle-3 {
+  animation: orbitParticle3 5s linear infinite;
+}
+
+.orb-container.listening .orb-particle-4 {
+  animation: orbitParticle4 8s linear infinite;
+}
+
+.orb-container.listening .orb-particle-5 {
+  animation: orbitParticle5 6.5s linear infinite;
+}
+
+.orb-container.listening .orb-particle-6 {
+  animation: orbitParticle6 7.5s linear infinite;
+}
+
+.orb-container.listening .orb-particle-7 {
+  animation: orbitParticle7 5.5s linear infinite;
+}
+
+.orb-container.listening .orb-particle-8 {
+  animation: orbitParticle8 9s linear infinite;
+}
+
+/* PROCESSING 状态 - 小球漂移 */
+.orb-container.processing .orb-particle {
+  animation: particleDrift 4s ease-in-out infinite;
+  filter: blur(12px);
+}
+
+/* 动画关键帧 */
+@keyframes orbBreathe {
+  0%, 100% {
+    transform: scale(1);
+    opacity: 0.9;
+  }
+  50% {
+    transform: scale(1.05);
+    opacity: 1;
+  }
+}
+
+@keyframes orbRotate {
+  from {
+    transform: rotate(0deg);
+  }
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+@keyframes orbPulse {
+  0%, 100% {
+    filter: brightness(1);
+  }
+  50% {
+    filter: brightness(1.15);
+  }
+}
+
+@keyframes orbBlink {
+  0%, 100% {
+    opacity: 0.85;
+  }
+  50% {
+    opacity: 1;
+  }
+}
+
+@keyframes glowPulse {
+  0%, 100% {
+    transform: scale(1);
+    opacity: 0.8;
+  }
+  50% {
+    transform: scale(1.1);
+    opacity: 1;
+  }
+}
+
+@keyframes orbitParticle1 {
+  from {
+    transform: rotate(0deg) translateX(40px) rotate(0deg);
+  }
+  to {
+    transform: rotate(360deg) translateX(40px) rotate(-360deg);
+  }
+}
+
+@keyframes orbitParticle2 {
+  from {
+    transform: translate(-50%, -50%) rotate(0deg) translateX(30px) rotate(0deg);
+  }
+  to {
+    transform: translate(-50%, -50%) rotate(360deg) translateX(30px) rotate(-360deg);
+  }
+}
+
+@keyframes orbitParticle3 {
+  from {
+    transform: rotate(0deg) translateX(35px) rotate(0deg);
+  }
+  to {
+    transform: rotate(-360deg) translateX(35px) rotate(360deg);
+  }
+}
+
+@keyframes orbitParticle4 {
+  from {
+    transform: rotate(0deg) translateX(45px) rotate(0deg);
+  }
+  to {
+    transform: rotate(360deg) translateX(45px) rotate(-360deg);
+  }
+}
+
+@keyframes orbitParticle5 {
+  from {
+    transform: rotate(0deg) translateX(38px) rotate(0deg);
+  }
+  to {
+    transform: rotate(-360deg) translateX(38px) rotate(360deg);
+  }
+}
+
+@keyframes orbitParticle6 {
+  from {
+    transform: rotate(0deg) translateX(42px) rotate(0deg);
+  }
+  to {
+    transform: rotate(360deg) translateX(42px) rotate(-360deg);
+  }
+}
+
+@keyframes orbitParticle7 {
+  from {
+    transform: rotate(0deg) translateX(33px) rotate(0deg);
+  }
+  to {
+    transform: rotate(-360deg) translateX(33px) rotate(360deg);
+  }
+}
+
+@keyframes orbitParticle8 {
+  from {
+    transform: rotate(0deg) translateX(50px) rotate(0deg);
+  }
+  to {
+    transform: rotate(360deg) translateX(50px) rotate(-360deg);
+  }
+}
+
+@keyframes particleDrift {
+  0%, 100% {
+    transform: translate(0, 0);
+  }
+  25% {
+    transform: translate(5px, -8px);
+  }
+  50% {
+    transform: translate(-5px, 5px);
+  }
+  75% {
+    transform: translate(8px, 3px);
+  }
+}
+
