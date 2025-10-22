@@ -9,6 +9,33 @@
   padding: env(safe-area-inset-top) env(safe-area-inset-right) env(safe-area-inset-bottom) env(safe-area-inset-left);
 }
 
+/* PROCESSING 过渡层 */
+.processing-overlay {
+  position: fixed;
+  inset: 0;
+  background: rgba(255,255,255,0.6);
+  backdrop-filter: blur(1.5px);
+  pointer-events: none;
+  z-index: 20;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+/* 旋转加载器（简洁） */
+.spinner {
+  width: 36px;
+  height: 36px;
+  border: 3px solid rgba(106, 68, 255, 0.15);
+  border-top-color: rgba(106, 68, 255, 0.9);
+  border-radius: 50%;
+  animation: spin 0.8s linear infinite;
+}
+
+@keyframes spin {
+  to { transform: rotate(360deg); }
+}
+
 /* 顶部栏 */
 .top-bar {
   position: absolute;
@@ -45,6 +72,44 @@
   padding: clamp(8px, 3vh, 24px) 16px 120px; /* 顶部内边距随屏幕高度变化 */
   gap: clamp(14px, 6vh, 40px); /* 元素间距自适应 */
   position: relative;
+}
+
+/* 语音球外层包裹：为提示提供相对定位参照 */
+.orb-wrap {
+  position: relative;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+/* 状态提示文案（贴近语音球，更亲切） */
+.state-hint {
+  position: absolute;
+  bottom: calc(100% + 8px); /* 贴在语音球正上方 8px */
+  left: 50%;
+  transform: translateX(-50%);
+  font-size: clamp(13px, 1.8vw, 16px);
+  color: rgba(60, 65, 80, 0.85);
+  /* 去对话框：移除背景盒与投影，仅保留轻微发光 */
+  background: transparent;
+  padding: 0;
+  border-radius: 0;
+  box-shadow: none;
+  text-shadow: 0 1px 8px rgba(180, 200, 255, 0.7), 0 2px 18px rgba(160, 180, 255, 0.4);
+  letter-spacing: 0.2px;
+  animation: hintFloatIn .35s ease-out;
+  /* 让文案更宽、更易读，控制在两行以内 */
+  min-width: 240px;
+  max-width: 60vw;
+  text-align: center;
+  line-height: 1.35;
+  white-space: normal;
+  text-wrap: balance;
+}
+
+@keyframes hintFloatIn {
+  0% { opacity: 0; transform: translate(-50%, -6px); }
+  100% { opacity: 1; transform: translate(-50%, 0); }
 }
 
 /* 实时识别文字 */
@@ -114,6 +179,30 @@
   margin: 0;
   line-height: 1.3;
 }
+
+/* 句子 + 重播按钮一行排列 */
+.output-row {
+  display: inline-flex;
+  align-items: center;
+  gap: 12px;
+}
+
+.replay-button {
+  width: 36px;
+  height: 36px;
+  border-radius: 50%;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  background: linear-gradient(135deg, #ffd8c2, #e3c9ff);
+  color: #6a44ff;
+  box-shadow: 0 6px 18px rgba(0,0,0,0.12);
+  border: none;
+  cursor: pointer;
+  transition: transform .15s ease, filter .15s ease;
+}
+.replay-button:hover { filter: brightness(1.05); }
+.replay-button:active { transform: scale(0.94); }
 
 /* 操作按钮 */
 .action-buttons {
@@ -255,5 +344,30 @@
     min-width: 320px;
     font-size: 22px;
   }
+}
+
+/* 按钮内旋转加载图标 */
+.button-spinner {
+  display: inline-block;
+  width: 20px;
+  height: 20px;
+  margin-right: 10px;
+  border: 3px solid rgba(255, 255, 255, 0.3);
+  border-top-color: #fff;
+  border-radius: 50%;
+  animation: spin 0.8s linear infinite;
+}
+
+@keyframes spin {
+  0% { transform: rotate(0deg); }
+  100% { transform: rotate(360deg); }
+}
+
+/* Processing 状态按钮样式 */
+.main-button.processing {
+  background: linear-gradient(145deg, #c0a8ff, #a888ff);
+  color: #fff;
+  cursor: not-allowed;
+  opacity: 0.9;
 }
 

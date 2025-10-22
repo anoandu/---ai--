@@ -170,8 +170,7 @@
   }
 }
 
-/* PROCESSING 状态 - 缩小 + 慢速旋转 */
-/* 删除空规则，避免 linter 警告 */
+/* PROCESSING 状态：保持与 Listening 同配色，不再切暖色 */
 
 /* 说话时：更快旋转并稍许弹性缩放 */
 .orb-container.listening .speaking {

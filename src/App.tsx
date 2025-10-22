@@ -19,6 +19,7 @@ function App() {
   const [realtimeTranscript, setRealtimeTranscript] = useState(''); // 实时识别文字
   const [audioLevel, setAudioLevel] = useState(0); // 音量级别 0-1
   const [isSpeaking, setIsSpeaking] = useState(false); // 是否检测到说话（用于强反馈）
+  const [isProcessing, setIsProcessing] = useState(false); // 同页处理中的标记
   
   const recognitionRef = useRef<SpeechRecognitionService | null>(null);
   const isRecordingRef = useRef(false);
@@ -169,7 +170,7 @@ function App() {
       recognitionRef.current?.start().then((maybeEarlyText) => {
         if (maybeEarlyText && state === 'LISTENING') {
           // 极少数情况下 start 就返回了最终文本（某些实现/权限弹窗后）
-          setState('PROCESSING');
+          setIsProcessing(true); // 不切页，仅按钮进入处理中
           isRecordingRef.current = false;
           stopAudioMonitoring();
           processTranscript(maybeEarlyText);
@@ -188,11 +189,11 @@ function App() {
     }
   };
 
-  // 停止录音并处理
+  // 停止录音并处理（同页处理）
   const stopListeningAndProcess = async () => {
     if (!isRecordingRef.current) return;
     
-    setState('PROCESSING');
+    setIsProcessing(true); // 不进入 PROCESSING 场景
     isRecordingRef.current = false;
     stopAudioMonitoring(); // 停止音量监测
 
@@ -206,6 +207,7 @@ function App() {
         console.error('Recognition failed:', error);
         alert('语音识别失败，请重试。');
         setState('IDLE');
+        setIsProcessing(false);
         setRealtimeTranscript('');
         return;
       }
@@ -222,6 +224,7 @@ function App() {
       if (!transcript) {
         alert('没有检测到语音，请重试。\n\n提示：请确保在安静环境下清晰说话。');
         setState('IDLE');
+        setIsProcessing(false);
         setRealtimeTranscript('');
         return;
       }
@@ -253,6 +256,8 @@ function App() {
       console.error('LLM processing error:', error);
       // 出错回到 IDLE
       setState('IDLE');
+    } finally {
+      setIsProcessing(false);
     }
   };
 
@@ -261,6 +266,12 @@ function App() {
     setState('OUTPUT');
     
     // TTS 播报
+    const textToSpeak = language === 'zh' ? currentSentence.zh : currentSentence.en;
+    await speak(textToSpeak, language);
+  };
+
+  // 输出页 - 重播
+  const handleReplaySpeak = async () => {
     const textToSpeak = language === 'zh' ? currentSentence.zh : currentSentence.en;
     await speak(textToSpeak, language);
   };
@@ -309,9 +320,7 @@ function App() {
       case 'IDLE':
         return t('speakNow', language);
       case 'LISTENING':
-        return t('listening', language);
-      case 'PROCESSING':
-        return t('processing', language);
+        return isProcessing ? t('processing', language) : t('stop', language);
       default:
         return '';
     }
@@ -352,7 +361,21 @@ function App() {
         return (
           <div className="main-text">
             <p className="output-prefix">{t('outputPrefix', language)}</p>
-            <h1 className="output-sentence">{outputSentence}</h1>
+            <div className="output-row">
+              <h1 className="output-sentence">{outputSentence}</h1>
+              <button
+                className="replay-button"
+                onClick={handleReplaySpeak}
+                aria-label={t('replay', language)}
+                title={t('replay', language)}
+              >
+                <svg viewBox="0 0 24 24" width="20" height="20" aria-hidden="true">
+                  <path d="M3 9v6h4l5 5V4L7 9H3z" fill="currentColor"></path>
+                  <path d="M16.5 12a4.5 4.5 0 00-3-4.24v8.48a4.5 4.5 0 003-4.24z" fill="currentColor" opacity=".6"></path>
+                  <path d="M19 12a7 7 0 00-4.5-6.53v2.2A4.8 4.8 0 0117 12a4.8 4.8 0 01-2.5 4.33v2.2A7 7 0 0019 12z" fill="currentColor" opacity=".35"></path>
+                </svg>
+              </button>
+            </div>
           </div>
         );
       
@@ -415,6 +438,7 @@ function App() {
 
   return (
     <div className="app">
+      {/* 已移除整页 Processing 遮罩，保持同页等待 */}
       {/* 顶部语言切换 */}
       <div className="top-bar">
         <button className="language-toggle" onClick={toggleLanguage}>
@@ -424,8 +448,16 @@ function App() {
 
       {/* 主内容区 */}
       <div className="main-content">
-        {/* 语音球 */}
-        <VoiceOrb state={state} audioLevel={audioLevel} isSpeaking={isSpeaking} />
+        {/* 语音球 + 悬浮提示（相对语音球定位） */}
+        <div className="orb-wrap">
+          {state === 'LISTENING' && (
+            <div className="state-hint" aria-live="polite">
+              <div>{t('listeningLine1', language)}</div>
+              <div>{t('listeningLine2', language)}</div>
+            </div>
+          )}
+          <VoiceOrb state={state === 'PROCESSING' ? 'LISTENING' : state} audioLevel={audioLevel} isSpeaking={isSpeaking} />
+        </div>
         
         {/* 实时识别文字 */}
         {state === 'LISTENING' && realtimeTranscript && (
@@ -442,14 +474,17 @@ function App() {
       </div>
 
       {/* 主按钮 */}
-      {(state === 'IDLE' || state === 'LISTENING' || state === 'PROCESSING') && (
+      {(state === 'IDLE' || state === 'LISTENING') && (
         <div className="bottom-bar">
           <button
-            className={`main-button ${state.toLowerCase()}`}
+            className={`main-button ${isProcessing ? 'processing' : state.toLowerCase()}`}
             onClick={handleMainButtonClick}
-            disabled={state === 'PROCESSING'}
+            disabled={isProcessing}
           >
-            {getMainButtonText()}
+            {isProcessing && (
+              <span className="button-spinner" />
+            )}
+            <span>{getMainButtonText()}</span>
           </button>
         </div>
       )}
