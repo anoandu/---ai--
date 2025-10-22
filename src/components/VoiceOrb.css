@@ -117,7 +117,7 @@
     rgba(180, 140, 255, 0.5) 70%,
     rgba(160, 120, 255, 0.3)
   );
-  filter: blur(1px);
+  filter: blur(1px) hue-rotate(var(--hue, 0deg)) saturate(var(--sat, 1));
   transition: background 0.8s ease;
 }
 
@@ -154,7 +154,7 @@
     rgba(230, 184, 255, 0) 70%
   );
   filter: blur(25px);
-  opacity: 0.6;
+  opacity: var(--glow, 0.6);
   transition: opacity 0.8s ease;
 }
 
