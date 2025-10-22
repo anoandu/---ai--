@@ -46,7 +46,7 @@ const VoiceOrb: React.FC<VoiceOrbProps> = ({ state, audioLevel = 0, isSpeaking =
         {/* 主球 */}
         <div
           className={`orb-main ${isActive ? 'active' : ''} ${isListening && isSpeaking ? 'speaking' : ''}`}
-          style={{ width: 160, height: 160, opacity: dynamicOpacity, transition: isListening ? 'opacity 0.1s ease-out' : undefined }}
+          style={{ position: 'relative', width: 160, height: 160, opacity: dynamicOpacity, transition: isListening ? 'opacity 0.1s ease-out' : undefined }}
         >
         {/* 内部小球 - 使用多个不同颜色和大小的小球 */}
         <div className="orb-particle orb-particle-1" />
