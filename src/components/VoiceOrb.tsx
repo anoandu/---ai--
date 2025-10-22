@@ -17,8 +17,9 @@ const VoiceOrb: React.FC<VoiceOrbProps> = ({ state, audioLevel = 0, isSpeaking =
   // const dynamicScale = isListening ? 1 + (audioLevel * 0.3) : 1; // 1.0 - 1.3
   const dynamicOpacity = isListening ? 0.8 + (audioLevel * 0.2) : 1; // 0.8 - 1.0
 
-  const baseScale = isListening ? (isSpeaking ? 1.25 : 1.1) : isProcessing ? 0.9 : 1;
-  const scale = baseScale + (isListening ? audioLevel * 0.2 : 0);
+  // 说话时更明显的缩放反馈
+  const baseScale = isListening ? (isSpeaking ? 1.35 : 1.12) : isProcessing ? 0.9 : 1;
+  const scale = baseScale + (isListening ? audioLevel * 0.3 : 0);
 
   // 调试：显示当前音量和说话状态
   console.log('VoiceOrb:', { state, audioLevel: audioLevel.toFixed(2), isSpeaking, scale: scale.toFixed(2) });
@@ -26,7 +27,7 @@ const VoiceOrb: React.FC<VoiceOrbProps> = ({ state, audioLevel = 0, isSpeaking =
   return (
     <div
       className={`orb-container ${state.toLowerCase()}`}
-      style={{ width: 180, height: 180, marginTop: 0 }}
+      style={{ width: 180, height: 180, marginTop: 'clamp(24px, 10vh, 72px)' }}
     >
       {/* 说话时的扩散波纹 */}
       {isListening && isSpeaking && (
@@ -44,7 +45,7 @@ const VoiceOrb: React.FC<VoiceOrbProps> = ({ state, audioLevel = 0, isSpeaking =
       >
         {/* 主球 */}
         <div
-          className={`orb-main ${isActive ? 'active' : ''}`}
+          className={`orb-main ${isActive ? 'active' : ''} ${isListening && isSpeaking ? 'speaking' : ''}`}
           style={{ width: 160, height: 160, opacity: dynamicOpacity, transition: isListening ? 'opacity 0.1s ease-out' : undefined }}
         >
         {/* 内部小球 - 使用多个不同颜色和大小的小球 */}

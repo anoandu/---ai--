@@ -35,7 +35,7 @@
 
 /* LISTENING 状态 - 放大 + 旋转 */
 .orb-container.listening .orb-main {
-  animation: orbRotate 8s linear infinite, orbPulse 2s ease-in-out infinite;
+  animation: orbRotate 7s linear infinite, orbPulse 1.6s ease-in-out infinite;
 }
 
 /* 说话时（通过外部 scale 叠加），增强颜色与发光强度可由父层内联样式控制。若需要强制速度更快：*/
@@ -50,7 +50,7 @@
   left: 50%;
   transform: translate(-50%, -50%);
   border-radius: 50%;
-  border: 5px solid rgba(140, 200, 255, 0.9); /* 提高不透明度与线宽 */
+  border: 6px solid rgba(120, 190, 255, 0.95); /* 更亮 */
   pointer-events: none;
   z-index: 5;
 }
@@ -81,9 +81,9 @@
     border-width: 5px;
   }
   100% {
-    width: 300px;
-    height: 300px;
-    opacity: 0.15; /* 保留微弱尾迹，避免瞬间消失 */
+    width: 320px;
+    height: 320px;
+    opacity: 0.25; /* 尾迹更明显 */
     border-width: 1px;
   }
 }
@@ -92,6 +92,11 @@
 .orb-container.processing .orb-main {
   transform: scale(0.9);
   animation: orbRotate 12s linear infinite;
+}
+
+/* 说话时：更快旋转并稍许弹性缩放 */
+.orb-container.listening .speaking {
+  animation: orbRotate 4s linear infinite, orbPulseStrong 1.2s ease-in-out infinite;
 }
 
 /* CONFIRM / OUTPUT 状态 - 轻微闪烁 */
@@ -313,6 +318,17 @@
   }
   50% {
     filter: brightness(1.15);
+  }
+}
+
+@keyframes orbPulseStrong {
+  0%, 100% {
+    transform: scale(1);
+    filter: brightness(1.05);
+  }
+  50% {
+    transform: scale(1.08);
+    filter: brightness(1.25);
   }
 }
 
