@@ -284,8 +284,9 @@ function App() {
 
   // 重说一次
   const handleTryAgain = () => {
-    setState('IDLE');
     setCurrentSentence({ zh: '', en: '' });
+    setRealtimeTranscript('');
+    startListening();
   };
 
   // 使用图片板
