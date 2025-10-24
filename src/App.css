@@ -194,9 +194,9 @@
   display: inline-flex;
   align-items: center;
   justify-content: center;
-  background: linear-gradient(135deg, #ffd8c2, #e3c9ff);
-  color: #6a44ff;
-  box-shadow: 0 6px 18px rgba(0,0,0,0.12);
+  background: #1f1f1f;
+  color: #fff;
+  box-shadow: 0 6px 18px rgba(0,0,0,0.16);
   border: none;
   cursor: pointer;
   transition: transform .15s ease, filter .15s ease;
@@ -222,8 +222,8 @@
 }
 
 .action-button-yes {
-  background: linear-gradient(135deg, #b8f4d4 0%, #b8e6ff 100%);
-  color: var(--color-text);
+  background: #1f1f1f;
+  color: #fff;
 }
 
 .action-button-no {
@@ -231,9 +231,15 @@
   color: var(--color-text);
 }
 
+/* 统一“再说一次”为与麦克风一致的深色样式 */
+.action-button-try-again {
+  background: #1f1f1f;
+  color: #fff;
+}
+
 .action-button-restart {
-  background: linear-gradient(135deg, #ffd4b8 0%, #e6b8ff 100%);
-  color: var(--color-text);
+  background: #1f1f1f;
+  color: #fff;
 }
 
 .action-button:active {
@@ -254,16 +260,20 @@
 }
 
 .main-button {
-  min-width: 280px;
-  padding: 18px 48px;
-  font-size: 20px;
-  font-weight: 600;
-  border-radius: 28px;
-  background: linear-gradient(135deg, #ffd4b8 0%, #e6b8ff 100%);
-  color: var(--color-text);
-  box-shadow: 0 8px 24px rgba(230, 184, 255, 0.4);
-  transition: all 0.4s var(--animation-easing);
+  width: 88px;
+  height: 88px;
+  border-radius: 50%;
+  background: #1f1f1f;
+  color: #fff;
+  box-shadow: 0 10px 24px rgba(0, 0, 0, 0.18);
+  transition: transform .2s ease, box-shadow .2s ease, filter .2s ease;
   pointer-events: auto;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border: none;
+  cursor: pointer;
+  flex-shrink: 0;
 }
 
 .main-button:active:not(:disabled) {
@@ -277,13 +287,14 @@
 }
 
 .main-button.listening {
-  background: linear-gradient(135deg, #b8e0ff 0%, #d4b8ff 100%);
-  animation: buttonPulse 2s ease-in-out infinite;
+  filter: brightness(1.02);
+  animation: none;
 }
 
 .main-button.processing {
-  background: linear-gradient(135deg, #ffd4b8 0%, #ffcccc 100%);
-  opacity: 0.8;
+  background: #1f1f1f; /* 与默认主按钮保持一致的深色圆 */
+  color: #fff;
+  opacity: 1;
 }
 
 /* 动画 */
@@ -311,10 +322,10 @@
 
 @keyframes buttonPulse {
   0%, 100% {
-    box-shadow: 0 8px 24px rgba(180, 224, 255, 0.4);
+    box-shadow: 0 10px 24px rgba(0, 0, 0, 0.18);
   }
   50% {
-    box-shadow: 0 8px 32px rgba(180, 224, 255, 0.6);
+    box-shadow: 0 12px 28px rgba(0, 0, 0, 0.22);
   }
 }
 
@@ -341,19 +352,19 @@
   }
 
   .main-button {
-    min-width: 320px;
-    font-size: 22px;
+    width: 88px;
+    height: 88px;
   }
 }
 
 /* 按钮内旋转加载图标 */
 .button-spinner {
-  display: inline-block;
-  width: 20px;
-  height: 20px;
-  margin-right: 10px;
-  border: 3px solid rgba(255, 255, 255, 0.3);
-  border-top-color: #fff;
+  display: block; /* 让其在 flex 容器内自然居中 */
+  width: 28px;
+  height: 28px;
+  margin: 0;
+  border: 3px solid rgba(255, 255, 255, 0.28);
+  border-top-color: #ffffff;
   border-radius: 50%;
   animation: spin 0.8s linear infinite;
 }
@@ -365,9 +376,9 @@
 
 /* Processing 状态按钮样式 */
 .main-button.processing {
-  background: linear-gradient(145deg, #c0a8ff, #a888ff);
+  background: #1f1f1f;
   color: #fff;
   cursor: not-allowed;
-  opacity: 0.9;
+  opacity: 1;
 }
 

@@ -11,6 +11,7 @@ import { callLLM } from './utils/llm';
 import VoiceOrb from './components/VoiceOrb';
 import PictureBoard from './components/PictureBoard';
 import './App.css';
+import { startIdleSfx, stopIdleSfx } from './utils/sfx';
 
 function App() {
   const [state, setState] = useState<AppState>('IDLE');
@@ -50,6 +51,16 @@ function App() {
       recognitionRef.current.setLanguage(language);
     }
   }, [language]);
+
+  // 待机可爱音效：仅在 IDLE 且未处理/未录音时播放
+  useEffect(() => {
+    if (state === 'IDLE') {
+      startIdleSfx();
+    } else {
+      stopIdleSfx();
+    }
+    return () => stopIdleSfx();
+  }, [state]);
 
   // 音量监测
   const startAudioMonitoring = async () => {
@@ -315,13 +326,28 @@ function App() {
     setCurrentSentence({ zh: '', en: '' });
   };
 
-  // 渲染主按钮文字
-  const getMainButtonText = () => {
+  // 渲染主按钮图标
+  const getMainButtonIcon = () => {
     switch (state) {
       case 'IDLE':
-        return t('speakNow', language);
+        return (
+          <svg width="32" height="32" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+            <path d="M8.5 10V8a3.5 3.5 0 1 1 7 0v2a3.5 3.5 0 1 1-7 0Z" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+            <path d="M5 11v1a7 7 0 0 0 14 0v-1" stroke="currentColor" stroke-width="2" stroke-linecap="round"/>
+            <path d="M12 19v3" stroke="currentColor" stroke-width="2" stroke-linecap="round"/>
+          </svg>
+        );
       case 'LISTENING':
-        return isProcessing ? t('processing', language) : t('stop', language);
+        if (isProcessing) {
+          return (
+            <div className="button-spinner" />
+          );
+        }
+        return (
+          <svg width="32" height="32" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+            <rect x="6" y="6" width="12" height="12" rx="2" fill="currentColor"/>
+          </svg>
+        );
       default:
         return '';
     }
@@ -481,11 +507,9 @@ function App() {
             className={`main-button ${isProcessing ? 'processing' : state.toLowerCase()}`}
             onClick={handleMainButtonClick}
             disabled={isProcessing}
+            aria-label={state === 'IDLE' ? t('speakNow', language) : t('stop', language)}
           >
-            {isProcessing && (
-              <span className="button-spinner" />
-            )}
-            <span>{getMainButtonText()}</span>
+            {getMainButtonIcon()}
           </button>
         </div>
       )}

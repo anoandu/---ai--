@@ -36,6 +36,12 @@
   overflow: visible;
 }
 
+/* IDLE 状态：眼睛回到暖桃 + 淡紫 */
+.orb-container.idle .orb-eye {
+  background: #FFF2E6; /* 柔暖米桃 */
+  box-shadow: 0 0 6px rgba(255,213,179,0.70), 0 0 16px rgba(233,192,255,0.28);
+}
+
 /* 左右看（容器平移，眼珠整体动） */
 @keyframes eyeLook {
   0%, 20% { transform: translateX(0); }
@@ -98,6 +104,28 @@
   z-index: 2;
   transform-origin: center;
   will-change: transform;
+}
+
+/* Layer Blur 外圈：默认透明，IDLE 时启用 */
+.orb-haze {
+  position: absolute;
+  inset: -42px;
+  z-index: 1;
+  border-radius: 50%;
+  pointer-events: none;
+  opacity: 0;
+  transition: opacity .3s ease;
+}
+.orb-container.idle .orb-haze {
+  opacity: 1;
+  background: radial-gradient(
+    circle at 40% 35%,
+    rgba(134, 184, 211, 0.26) 0%,
+    rgba(134, 184, 211, 0.16) 46%,
+    rgba(134, 184, 211, 0.08) 72%,
+    rgba(134, 184, 211, 0) 86%
+  );
+  filter: blur(38px);
 }
 
 .orb-main {
@@ -199,6 +227,35 @@
   transition: background 0.8s ease;
 }
 
+/* 线性渐变覆盖层（仅 IDLE 用于柔化过渡）*/
+.orb-overlay {
+  position: absolute;
+  inset: 0;
+  border-radius: 50%;
+  pointer-events: none;
+  mix-blend-mode: screen;
+  opacity: 0; /* 默认关闭 */
+}
+.orb-container.idle .orb-overlay {
+  opacity: 1;
+  background: linear-gradient(135deg,
+    rgba(255, 213, 179, 0.45) 0%,
+    rgba(233, 192, 255, 0.40) 100%
+  );
+  filter: blur(12px);
+}
+
+/* IDLE 专用主渐变覆盖：更偏暖的桃色 → 淡紫过渡 */
+.orb-container.idle .orb-gradient {
+  background: radial-gradient(
+    circle at 35% 30%,
+    rgba(255, 213, 179, 0.70),
+    rgba(243, 200, 220, 0.45) 45%,
+    rgba(233, 192, 255, 0.40) 75%,
+    rgba(233, 192, 255, 0.28)
+  );
+}
+
 /* LISTENING 状态 - 冷色调（蓝紫） */
 .orb-container.listening .orb-gradient {
   background: radial-gradient(
@@ -246,13 +303,73 @@
   animation: glowPulse 2s ease-in-out infinite;
 }
 
+/* IDLE 下去掉边缘光晕，使边缘更干净 */
+.orb-container.idle .orb-glow {
+  opacity: 0;
+  background: transparent;
+  animation: none;
+}
+
+/* 确认/输出页与 IDLE 同配色，且去掉光晕 */
+.orb-container.confirm .orb-gradient,
+.orb-container.output .orb-gradient {
+  background: radial-gradient(
+    circle at 35% 30%,
+    rgba(255, 213, 179, 0.70),
+    rgba(243, 200, 220, 0.45) 45%,
+    rgba(233, 192, 255, 0.40) 75%,
+    rgba(233, 192, 255, 0.28)
+  );
+}
+
+.orb-container.confirm .orb-overlay,
+.orb-container.output .orb-overlay {
+  opacity: 1;
+  background: linear-gradient(135deg,
+    rgba(255, 213, 179, 0.45) 0%,
+    rgba(233, 192, 255, 0.40) 100%
+  );
+  filter: blur(12px);
+}
+
+.orb-container.confirm .orb-glow,
+.orb-container.output .orb-glow {
+  opacity: 0;
+  background: transparent;
+  animation: none;
+}
+
 .orb-container.processing .orb-glow {
-  opacity: 0.8;
+  opacity: 0.9;
   background: radial-gradient(
     circle,
     rgba(255, 190, 210, 0.4),
     rgba(255, 190, 210, 0) 70%
   );
+}
+
+/* NO_OPTIONS 界面：统一为与 IDLE 相同的配色，并关闭光晕 */
+.orb-container.no_options .orb-gradient {
+  background: radial-gradient(
+    circle at 35% 30%,
+    rgba(255, 213, 179, 0.70),
+    rgba(243, 200, 220, 0.45) 45%,
+    rgba(233, 192, 255, 0.40) 75%,
+    rgba(233, 192, 255, 0.28)
+  );
+}
+.orb-container.no_options .orb-overlay {
+  opacity: 1;
+  background: linear-gradient(135deg,
+    rgba(255, 213, 179, 0.45) 0%,
+    rgba(233, 192, 255, 0.40) 100%
+  );
+  filter: blur(12px);
+}
+.orb-container.no_options .orb-glow {
+  opacity: 0;
+  background: transparent;
+  animation: none;
 }
 
 /* 内部小球 */
@@ -328,6 +445,40 @@
   bottom: 30%;
   right: 35%;
   background: radial-gradient(circle, rgba(200, 180, 255, 0.8), rgba(200, 180, 255, 0));
+}
+
+/* Figma 配色在 IDLE 状态下的专用颜色与布局 */
+.orb-container.idle .orb-particle-1 { /* 桃色主体 */
+  top: 28%; left: 22%; width: 70px; height: 70px;
+  background: radial-gradient(circle, rgba(255, 213, 179, 0.55), rgba(255, 213, 179, 0));
+}
+.orb-container.idle .orb-particle-2 { /* E9C0FF - 淡紫 */
+  top: 36%; left: 56%; width: 88px; height: 88px;
+  background: radial-gradient(circle, rgba(233, 192, 255, 0.50), rgba(233, 192, 255, 0));
+}
+.orb-container.idle .orb-particle-3 { /* 抑制深紫，改为很淡的紫粉 */
+  bottom: 26%; right: 26%; width: 64px; height: 64px;
+  background: radial-gradient(circle, rgba(233, 192, 255, 0.22), rgba(233, 192, 255, 0));
+}
+.orb-container.idle .orb-particle-4 { /* FFA100 - 橙黄高光（降低权重） */
+  top: 22%; right: 18%; width: 60px; height: 60px;
+  background: radial-gradient(circle, rgba(255, 161, 0, 0.18), rgba(255, 161, 0, 0));
+}
+.orb-container.idle .orb-particle-5 { /* 桃粉过渡 */
+  bottom: 18%; left: 24%; width: 62px; height: 62px;
+  background: radial-gradient(circle, rgba(255, 213, 179, 0.32), rgba(255, 213, 179, 0));
+}
+.orb-container.idle .orb-particle-6 { /* 冷淡紫阴影 */
+  top: 18%; left: 48%; width: 50px; height: 50px;
+  background: radial-gradient(circle, rgba(233, 192, 255, 0.22), rgba(233, 192, 255, 0));
+}
+.orb-container.idle .orb-particle-7 { /* 温暖补光（更接近桃色） */
+  top: 58%; left: 30%; width: 70px; height: 70px;
+  background: radial-gradient(circle, rgba(255, 213, 179, 0.24), rgba(255, 213, 179, 0));
+}
+.orb-container.idle .orb-particle-8 { /* 蓝粉衔接，降低紫感 */
+  bottom: 32%; right: 38%; width: 80px; height: 80px;
+  background: radial-gradient(circle, rgba(233, 192, 255, 0.28), rgba(233, 192, 255, 0));
 }
 
 /* LISTENING 状态 - 小球公转动画 */

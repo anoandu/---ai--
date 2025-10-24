@@ -1,6 +1,7 @@
-import React from 'react';
+import React, { useEffect, useRef } from 'react';
 import { AppState } from '../types';
 import './VoiceOrb.css';
+import { playBlinkSfx } from '../utils/sfx';
 
 interface VoiceOrbProps {
   state: AppState;
@@ -12,6 +13,7 @@ const VoiceOrb: React.FC<VoiceOrbProps> = ({ state, audioLevel = 0, isSpeaking =
   const isListening = state === 'LISTENING';
   const isProcessing = state === 'PROCESSING';
   const isActive = isListening || isProcessing;
+  const containerRef = useRef<HTMLDivElement | null>(null);
 
   // 根据音量调整球的大小和亮度
   // const dynamicScale = isListening ? 1 + (audioLevel * 0.3) : 1; // 1.0 - 1.3
@@ -28,8 +30,19 @@ const VoiceOrb: React.FC<VoiceOrbProps> = ({ state, audioLevel = 0, isSpeaking =
   // 调试：显示当前音量和说话状态
   console.log('VoiceOrb:', { state, audioLevel: audioLevel.toFixed(2), isSpeaking, scale: scale.toFixed(2) });
 
+  // 眨眼同步音效：仅在 IDLE 播放
+  useEffect(() => {
+    const root = containerRef.current;
+    if (!root || state !== 'IDLE') return;
+    const eyes = root.querySelectorAll('.orb-eye');
+    const onIter = () => playBlinkSfx();
+    eyes.forEach(el => el.addEventListener('animationiteration', onIter));
+    return () => eyes.forEach(el => el.removeEventListener('animationiteration', onIter));
+  }, [state]);
+
   return (
     <div
+      ref={containerRef}
       className={`orb-container ${state.toLowerCase()}`}
       style={{ width: 180, height: 180, marginTop: 'clamp(24px, 10vh, 72px)' }}
     >
@@ -43,6 +56,7 @@ const VoiceOrb: React.FC<VoiceOrbProps> = ({ state, audioLevel = 0, isSpeaking =
           transition: 'transform 0.12s ease-out'
         }}
       >
+        {/* haze 层移除，保持干净边缘 */}
         {/* 主球 */}
         <div
           className={`orb-main ${isActive ? 'active' : ''} ${isListening && isSpeaking ? 'speaking' : ''}`}
@@ -67,6 +81,8 @@ const VoiceOrb: React.FC<VoiceOrbProps> = ({ state, audioLevel = 0, isSpeaking =
         <div className="orb-particle orb-particle-6" />
         <div className="orb-particle orb-particle-7" />
         <div className="orb-particle orb-particle-8" />
+        {/* 线性渐变覆盖层（仅 IDLE 时柔化过渡）*/}
+        <div className="orb-overlay" />
         
         {/* 主渐变层 */}
         <div className="orb-gradient" />
