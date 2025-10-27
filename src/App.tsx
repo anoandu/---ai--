@@ -15,7 +15,7 @@ import { startIdleSfx, stopIdleSfx } from './utils/sfx';
 
 function App() {
   const [state, setState] = useState<AppState>('IDLE');
-  const [language, setLanguage] = useState<Language>('zh');
+  const [language, setLanguage] = useState<Language>('en');
   const [currentSentence, setCurrentSentence] = useState({ zh: '', en: '' });
   const [realtimeTranscript, setRealtimeTranscript] = useState(''); // 实时识别文字
   const [audioLevel, setAudioLevel] = useState(0); // 音量级别 0-1
@@ -359,7 +359,20 @@ function App() {
       case 'IDLE':
         return (
           <div className="main-text">
-            <h1 className="welcome-text">{t('welcome', language)}</h1>
+            <h1 className="welcome-text">
+              {(() => {
+                const raw = t('welcome', language);
+                const parts = raw.split('[name]');
+                const nameText = 'A-cube!';
+                return (
+                  <>
+                    {parts[0]}
+                    <span className="brand-name">{nameText}</span>
+                    {parts[1] ?? ''}
+                  </>
+                );
+              })()}
+            </h1>
             <p className="subtitle-text">{t('subtitle', language)}</p>
           </div>
         );

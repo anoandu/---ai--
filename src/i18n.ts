@@ -2,7 +2,7 @@ import { Language } from './types';
 
 export const translations = {
   zh: {
-    welcome: '你好，我是 [name]。',
+    welcome: '你好，我是 [name]',
     subtitle: '我会帮助你表达你想说的话。',
     speakNow: '现在说话',
     listening: '正在聆听… 请说话，完成后点击停止',
@@ -22,7 +22,7 @@ export const translations = {
     back: '返回',
   },
   en: {
-    welcome: 'Hi there, I\'m [name].',
+    welcome: 'Hi there, I\'m [name]',
     subtitle: 'I\'ll help you express what you want to say.',
     speakNow: 'Speak now',
     listening: 'Listening… Speak now, tap to stop',
