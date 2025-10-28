@@ -146,6 +146,8 @@ function App() {
     setLanguage(prev => prev === 'zh' ? 'en' : 'zh');
   };
 
+  // （模式切换功能已移除）
+
   // 主按钮点击处理
   const handleMainButtonClick = async () => {
     if (state === 'IDLE') {
@@ -424,6 +426,8 @@ function App() {
     }
   };
 
+  // （新功能界面已移除）
+
   // 渲染操作按钮
   const renderActionButtons = () => {
     if (state === 'CONFIRM') {
@@ -484,35 +488,51 @@ function App() {
         <button className="language-toggle" onClick={toggleLanguage}>
           {language === 'zh' ? 'EN' : '中文'}
         </button>
+        {state === 'IDLE' && (
+          <button
+            className="picture-board-toggle"
+            onClick={handleUsePictureBoard}
+            aria-label={t('usePictureBoard', language)}
+            title={t('usePictureBoard', language)}
+          >
+            {/* photo/picture icon */}
+            <svg width="22" height="22" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
+              <rect x="3" y="4" width="18" height="16" rx="3" stroke="currentColor" stroke-width="2" />
+              <circle cx="9" cy="10" r="2" fill="currentColor" />
+              <path d="M5 17l4-4 3 3 3-3 4 4" stroke="currentColor" stroke-width="2" fill="none" stroke-linecap="round" stroke-linejoin="round" />
+            </svg>
+          </button>
+        )}
       </div>
 
       {/* 主内容区 */}
       <div className="main-content">
-        {/* 语音球 + 悬浮提示（相对语音球定位） */}
-        <div className="orb-wrap">
-          {state === 'LISTENING' && (
-            <div className="state-hint" aria-live="polite">
-              <div>{t('listeningLine1', language)}</div>
-              <div>{t('listeningLine2', language)}</div>
+          <>
+            {/* 语音球 + 悬浮提示（相对语音球定位） */}
+            <div className="orb-wrap">
+              {state === 'LISTENING' && (
+                <div className="state-hint" aria-live="polite">
+                  <div>{t('listeningLine1', language)}</div>
+                  <div>{t('listeningLine2', language)}</div>
+                </div>
+              )}
+              <VoiceOrb state={state === 'PROCESSING' ? 'LISTENING' : state} audioLevel={audioLevel} isSpeaking={isSpeaking} />
             </div>
-          )}
-          <VoiceOrb state={state === 'PROCESSING' ? 'LISTENING' : state} audioLevel={audioLevel} isSpeaking={isSpeaking} />
-        </div>
-        
-        {/* 实时识别文字 */}
-        {state === 'LISTENING' && realtimeTranscript && (
-          <div className="realtime-transcript">
-            <p className="realtime-text">{realtimeTranscript}</p>
-          </div>
-        )}
-        
-        {/* 主文字区域 */}
-        {renderMainText()}
+            
+            {/* 实时识别文字 */}
+            {state === 'LISTENING' && realtimeTranscript && (
+              <div className="realtime-transcript">
+                <p className="realtime-text">{realtimeTranscript}</p>
+              </div>
+            )}
+            
+            {/* 主文字区域 */}
+            {renderMainText()}
 
-        {/* 操作按钮 */}
-        {renderActionButtons()}
+            {/* 操作按钮 */}
+            {renderActionButtons()}
+          </>
       </div>
-
       {/* 主按钮 */}
       {(state === 'IDLE' || state === 'LISTENING') && (
         <div className="bottom-bar">

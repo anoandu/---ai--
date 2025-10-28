@@ -23,4 +23,3 @@ export interface CommonNeed {
   label_en: string;
   intent: string;
 }
-
