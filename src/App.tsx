@@ -299,13 +299,15 @@ function App() {
   const handleTryAgain = () => {
     setCurrentSentence({ zh: '', en: '' });
     setRealtimeTranscript('');
-    startListening();
+    setState('IDLE'); // 返回首页
   };
 
   // 使用图片板
   const handleUsePictureBoard = () => {
     setState('DISAMBIGUATE');
   };
+
+  // （导出功能已移除）
 
 
   // 图片板选择
@@ -489,19 +491,21 @@ function App() {
           {language === 'zh' ? 'EN' : '中文'}
         </button>
         {state === 'IDLE' && (
-          <button
-            className="picture-board-toggle"
-            onClick={handleUsePictureBoard}
-            aria-label={t('usePictureBoard', language)}
-            title={t('usePictureBoard', language)}
-          >
-            {/* photo/picture icon */}
-            <svg width="22" height="22" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
-              <rect x="3" y="4" width="18" height="16" rx="3" stroke="currentColor" stroke-width="2" />
-              <circle cx="9" cy="10" r="2" fill="currentColor" />
-              <path d="M5 17l4-4 3 3 3-3 4 4" stroke="currentColor" stroke-width="2" fill="none" stroke-linecap="round" stroke-linejoin="round" />
-            </svg>
-          </button>
+          <>
+            <button
+              className="picture-board-toggle"
+              onClick={handleUsePictureBoard}
+              aria-label={t('usePictureBoard', language)}
+              title={t('usePictureBoard', language)}
+            >
+              {/* photo/picture icon */}
+              <svg width="22" height="22" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
+                <rect x="3" y="4" width="18" height="16" rx="3" stroke="currentColor" stroke-width="2" />
+                <circle cx="9" cy="10" r="2" fill="currentColor" />
+                <path d="M5 17l4-4 3 3 3-3 4 4" stroke="currentColor" stroke-width="2" fill="none" stroke-linecap="round" stroke-linejoin="round" />
+              </svg>
+            </button>
+          </>
         )}
       </div>
 
